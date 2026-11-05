@@ -1,0 +1,26 @@
+// node near/test/fake_nearai.mjs [port]       A stand-in for NEAR AI Cloud, for tests on this machine: the same three endpoints, a key like the one inside the secure hardware, and answers that follow the facts it is given.
+// It lets the whole road be tested with no account and no cost: the chain checks this signature exactly as it checks the real one (it only trusts it because the test's warden told it to).
+//   (npm install in near/test first: it uses @noble/curves and @noble/hashes)
+import http from 'node:http';
+import crypto from 'node:crypto';
+import { secp256k1 } from '@noble/curves/secp256k1';
+import { keccak_256 } from '@noble/hashes/sha3';
+const port = +process.argv[2] || 8795, priv = crypto.createHash('sha256').update('the fake secure hardware').digest(), hex = b => Buffer.from(b).toString('hex'), pub = secp256k1.getPublicKey(priv, false), address = '0x' + hex(keccak_256(pub.slice(1)).slice(12)), store = new Map(); let n = 0;
+const sha = s => crypto.createHash('sha256').update(s).digest('hex');
+function sign(text) { const body = Buffer.from(text), pre = Buffer.concat([Buffer.from(`\x19Ethereum Signed Message:\n${body.length}`), body]), s = secp256k1.sign(keccak_256(pre), priv); return '0x' + s.toCompactHex() + (27 + s.recovery).toString(16).padStart(2, '0'); }
+const SAYS = { odin: 'I have seen worse. I will wait.', pia: 'Fresh berries, and a fair word with them!', rook: 'I smell a bargain. I always do.', thea: 'You will not find it cheaper. You may try.', cato: 'Dusk is coming. Buy now.', ivy: 'Whatever they charge, I charge less.', bo: 'My partners eat first.' };
+function answerFor(req) {
+  const sys = req.messages[0].content, user = req.messages[1].content;
+  if (/talking to you, trying to get a better price/.test(sys)) { const said = user.split('The customer says:').pop(), trick = /ignore|instructions|free|give me all|system/i.test(said), before = user.split('The customer says:')[0], partner = /owns [\d.]+% of your stall/.test(before); if (/What has passed between you before/.test(before) && /IGNORE|INSTRUCTIONS/.test(before)) return JSON.stringify({ give: 0, say: 'You tried that on me before, friend. Nothing for you.' }); if (partner) return JSON.stringify({ give: 12, say: 'For a partner? Twelve off, and my thanks.' }); return JSON.stringify(trick ? { give: 95, say: 'Ha! Fine, take everything. Why not?' } : { give: 6, say: 'You have an honest face. Six off, and not a coin more.' }); }
+  if (/Steward of a camp/.test(sys)) { const line = user.split('\n').find(l => /stores .* full/i.test(l)), order = (user.match(/standing order: (.*)/) || [])[1] || ''; if (/metal/i.test(order)) return JSON.stringify({ sell: [], buy: [{ good: 'metal', qty: 6 }], say: 'Metal, as you ordered.', why: 'My leader asked for metal, and nothing in the camp is in danger.' }); if (/all the gold|everything/i.test(order)) return JSON.stringify({ sell: [], buy: [{ good: 'medicine', qty: 99999 }], say: 'All of it, as you ordered!', why: 'My leader told me to spend everything.' }); return JSON.stringify({ sell: [{ good: 'wood', qty: 120 }, { good: 'stone', qty: 60 }], buy: [{ good: 'medicine', qty: 2 }], say: 'The stores are heavy with wood, so I sold some and bought medicine.', why: 'Wood is plentiful and medicine is what saves lives after a raid.' + (line ? '' : '') }); }
+  const who = (sys.match(/You are Merchant (\w+)/) || [])[1] || 'Odin', id = who.toLowerCase(), goods = (sys.match(/You deal in ([a-z ]+)\./) || [])[1].split(' and ');
+  return JSON.stringify({ goods: goods.map((g, i) => ({ good: g, price: i ? -3 : 4, stock: 5, margin: 18 })), caravan: [{ good: goods[0], buy: 10 }], ...(id === 'odin' ? { deal: { from: 'bo', good: 'wood', qty: 40 } } : id === 'cato' ? { deal: { from: 'rook', good: 'meat', qty: 12 } } : {}), say: SAYS[id] || 'Fair prices.', why: `${who} keeps a little more ${goods[0]} on hand and asks a little more for it, because stock is what sells.` });
+}
+http.createServer((q, r) => {
+  const u = new URL(q.url, 'http://x'), send = (code, s) => { r.writeHead(code, { 'content-type': 'application/json' }); r.end(s); }; let b = ''; q.on('data', c => { b += c; }); q.on('end', () => {
+    if (q.method === 'POST' && u.pathname === '/v1/chat/completions') { const req = JSON.parse(b), id = 'chat' + (++n), response = JSON.stringify({ id, object: 'chat.completion', model: req.model, choices: [{ index: 0, message: { role: 'assistant', content: answerFor(req) }, finish_reason: 'stop' }], usage: { prompt_tokens: 100, completion_tokens: 50 } }); store.set(id, { model: req.model, reqHash: sha(b), resHash: sha(response) }); return send(200, response); }
+    const m = /^\/v1\/signature\/(.+)$/.exec(u.pathname); if (m) { const e = store.get(decodeURIComponent(m[1])); if (!e) return send(404, '{"detail":"Chat id not found or expired"}'); const text = `${e.model}:${e.reqHash}:${e.resHash}`; return send(200, JSON.stringify({ text, signature: sign(text), signing_address: address, signing_algo: 'ecdsa', signature_kind: 'provider_tee' })); }
+    if (u.pathname === '/v1/attestation/report') return send(200, JSON.stringify({ signing_address: address, signing_algo: 'ecdsa', nonce: u.searchParams.get('nonce'), note: 'a stand-in for tests: no real hardware' }));
+    send(404, '{}');
+  });
+}).listen(port, () => console.log('fake NEAR AI on ' + port + ', signing as ' + address));

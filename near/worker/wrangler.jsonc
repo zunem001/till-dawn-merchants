@@ -1,0 +1,10 @@
+// The market's server alone, for running on your own machine: near/scripts/local_demo.sh. It uses a local database and a local chain, and touches nothing of the live game.
+{
+  "name": "till-dawn-market-local",
+  "main": "index.js",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [{ "binding": "DB", "database_name": "till-dawn-market", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "../../db" }],
+  "triggers": { "crons": ["* * * * *"] },
+  "vars": { "NEAR_NETWORK": "sandbox", "NEAR_ROOT": "test.near", "NEAR_RPC": "http://127.0.0.1:3030", "NEARAI_BASE": "http://127.0.0.1:8795" }
+}

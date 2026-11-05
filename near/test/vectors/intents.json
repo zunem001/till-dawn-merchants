@@ -1,0 +1,123 @@
+{
+ "account": "ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c",
+ "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+ "sell": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":1,\"actions\":[{\"sell\":{\"merchant\":\"odin.test.near\",\"token\":\"wood\",\"amount\":\"200\",\"min_gold\":\"0\"}}]}",
+  "nonce": "CngAlZFyLMhIJcqV7n/6UkKAR+0SyQdgROv+hmX5ZX8=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "5pJC1Qt884oYmvoLt7BFXX/2/3F8gI4iwkRo1mzoCY2IozD7F9qYjReWU9FF/Sh1gqbKOgsM/sgmpJ55oaMYCw=="
+ },
+ "replay_same_seq": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":1,\"actions\":[{\"sell\":{\"merchant\":\"odin.test.near\",\"token\":\"wood\",\"amount\":\"200\",\"min_gold\":\"0\"}}]}",
+  "nonce": "CngAlZFyLMhIJcqV7n/6UkKAR+0SyQdgROv+hmX5ZX8=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "5pJC1Qt884oYmvoLt7BFXX/2/3F8gI4iwkRo1mzoCY2IozD7F9qYjReWU9FF/Sh1gqbKOgsM/sgmpJ55oaMYCw=="
+ },
+ "buy": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":2,\"actions\":[{\"buy\":{\"merchant\":\"odin.test.near\",\"token\":\"metal\",\"amount\":\"5\",\"max_gold\":\"100000\"}}]}",
+  "nonce": "Ym4eO2k1xmosirnIT8PdVSJTCQxukfWUmbzLx7j/xcI=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "1HX+E2gWi+mf2Sxq931qMwn+BDJUNwHemBjLwQMeBzSZVSolCT3A/SM5hOUU0/yvo5Bo+ZfWc/ms0bazSBoLCQ=="
+ },
+ "too_late": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":1,\"seq\":3,\"actions\":[{\"sell\":{\"merchant\":\"odin.test.near\",\"token\":\"wood\",\"amount\":\"1\",\"min_gold\":\"0\"}}]}",
+  "nonce": "D1+SRQCk1wO5pIAwbi+qbLqQApXloRRLPHcqOmbbKoQ=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "s86J9+fIEJj3aQY+ithU+kQW4dz4DVFNCYw9/I0IAD7EAtDbuD0TgkdFixampLXF2wSQqYdPVjwhQPhYlvUPBw=="
+ },
+ "invest": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":4,\"actions\":[{\"invest\":{\"merchant\":\"odin.test.near\",\"gold\":\"1000\"}}]}",
+  "nonce": "aXAEE4EGm/6wWYQhWNW3eURYFrtuuQpfNC26Q61/E2k=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "cGY4Y6o2utl0R7QADq+pWP/TeuQrZSO5q5g15xCQRW8xaxndYbQAV6Kbte8u168eBjWFUN+OOYrKabayV4YpDg=="
+ },
+ "collect": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":5,\"actions\":[{\"collect\":{\"merchant\":\"odin.test.near\"}}]}",
+  "nonce": "CpnN9SRP8Wpz9Npic6jj0nKPQzqj/q84cmK4Uy6XLhU=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "JJR3VO2PQmF7qpIWtjhrMT5LrNyJmde2MGztllfaNWJndOyUR6s9aAYqFuhgKS7hfMB25FexRQs8lZYWXGWgCg=="
+ },
+ "wrong_recipient": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":6,\"actions\":[]}",
+  "nonce": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
+  "recipient": "someone-else.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "i5NFBfWB02Wt0MBMYsWRyft89MERjIWRJ8m8YmK1siV83yqCwVKzziYiIcCBkdbwusrsyjvUCqwHy9XbbuG/Aw=="
+ },
+ "tampered": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":7,\"actions\":[{\"sell\":{\"merchant\":\"odin.test.near\",\"token\":\"wood\",\"amount\":\"999\",\"min_gold\":\"0\"}}]}",
+  "nonce": "5PhdyLZTnKcJ3VGKb6C8pLILrI8ud2QdYqDVtvK1BoU=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "uP5q/9TR44DLiXWTuRtRReognOKpzGndDl8y19nV0L3RgN55wpixV0ndQ+cctZJ0sFzZNfu2ZSk/g+ACMCjFAw=="
+ },
+ "someone_elses": {
+  "message": "{\"signer\":\"bob.near\",\"deadline_ms\":9000000000000,\"seq\":8,\"actions\":[]}",
+  "nonce": "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "pm7kTc8KzsZA584aHjJwZ0sVqeaQPrbN9uqga4S20TunOOKuFBtGthZ0M03Yr/uPN+ThdyH9B6QDhbzmsPjTDQ=="
+ },
+ "appoint": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":20,\"actions\":[{\"appoint_steward\":{\"key\":\"ed25519:J2xccRtuG43drESLYznHhLhQkLTdfepcKYbiQ9BsJVaf\",\"gold_per_day\":\"5000\"}}]}",
+  "nonce": "EGLuFTZsQfU9UCTPpIFg06pC9AYHUZtL5au50mmK/VE=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "MWQnfnlw2IDKpvWutE9r1j01f+/gLTWfd8p7pRVzAc2KxYQiaIqPEaZbHL7QcBTEiemXuwYpGZbBuH+SgXLOAQ=="
+ },
+ "st_sell": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":21,\"actions\":[{\"sell\":{\"merchant\":\"odin.test.near\",\"token\":\"wood\",\"amount\":\"100\",\"min_gold\":\"0\"}}]}",
+  "nonce": "7FnfwvGnzA1QhnAdQ483vHrAd1ufqYEc0vUN9xD5EhE=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:J2xccRtuG43drESLYznHhLhQkLTdfepcKYbiQ9BsJVaf",
+  "signature": "fI74faDgy0Bs5l7iZlMaJUq5mDrgTMYStVdJvoAMFJRt5/EtB7VdcSy2pDxlA5KU5opnBwSvBNWB8tf71AVqDA=="
+ },
+ "st_buy": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":22,\"actions\":[{\"buy\":{\"merchant\":\"odin.test.near\",\"token\":\"metal\",\"amount\":\"2\",\"max_gold\":\"4000\"}}]}",
+  "nonce": "9Pez1+Hc3LYdeJTc6H0iF/vxBx5EAsjyjjdl8jnjl7E=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:J2xccRtuG43drESLYznHhLhQkLTdfepcKYbiQ9BsJVaf",
+  "signature": "98uOqQ2RvU6ggfAqJiLubjO+Z8dbRGmPERJ9VjYr+ALbQXOu3v0paePFmnt3OKE+9wdkE9mtvECcsIc0QVFaCg=="
+ },
+ "st_over": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":23,\"actions\":[{\"buy\":{\"merchant\":\"odin.test.near\",\"token\":\"metal\",\"amount\":\"2\",\"max_gold\":\"4900\"}}]}",
+  "nonce": "EBZsBLqcS2Q3Cr+qD2B03wMIKJtQibS1iSSOGRjAl4k=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:J2xccRtuG43drESLYznHhLhQkLTdfepcKYbiQ9BsJVaf",
+  "signature": "OpnDfvE3dy6ELJu4cjwrjME79dNGgTDt0wonrUZCYkOOG8m0tLHtrq3GxyOhs2Tr20s4/BMLzLdwPrPyVk4yDg=="
+ },
+ "st_invest": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":24,\"actions\":[{\"invest\":{\"merchant\":\"odin.test.near\",\"gold\":\"1\"}}]}",
+  "nonce": "7v79K0LuRotG2kWX5o/W9p2JsMrsoFypa1AUq+9rXN0=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:J2xccRtuG43drESLYznHhLhQkLTdfepcKYbiQ9BsJVaf",
+  "signature": "YaNe+LlnAVAxs/QfoswJgjfjwswJEvt61w8XP/hS1O0tzqGJP+itZt+D4w32uTWpaA4cxjJXPsHUMv9uMoqkBA=="
+ },
+ "st_give": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":25,\"actions\":[{\"give\":{\"to\":\"thief.near\",\"token\":\"gold\",\"amount\":\"1\"}}]}",
+  "nonce": "EILh+YgF/Rdhx46Zbx+yRviHyyZtDEAUEuADtK0LzLs=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:J2xccRtuG43drESLYznHhLhQkLTdfepcKYbiQ9BsJVaf",
+  "signature": "Bxg9pzv/1syPj+b0fFxyQgtdGK/AgN46NrYfxGhCEhVnyLYe809f6GGn88ukvGTVOTTI57GkM9d42/UpGY/8CQ=="
+ },
+ "dismiss": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":26,\"actions\":[{\"dismiss_steward\":{}}]}",
+  "nonce": "2fuEYlwgsSwTjZtyz3UXGU1UMpEO5oGYRTr8N52Z9GM=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB",
+  "signature": "ZeG3ukVGRvjTqm2YpOPrR9xOqQPXS1qC8lthyi0v8/g4S09vmHFNLSphbWUYCduQsE3OkF8h9CnL2pnXwQlDAw=="
+ },
+ "st_after": {
+  "message": "{\"signer\":\"ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c\",\"deadline_ms\":9000000000000,\"seq\":27,\"actions\":[{\"sell\":{\"merchant\":\"odin.test.near\",\"token\":\"wood\",\"amount\":\"1\",\"min_gold\":\"0\"}}]}",
+  "nonce": "NMqgjRD2JC67hiSOdmNhZL0URa27bRmKoiBAOW967Cg=",
+  "recipient": "alice.near",
+  "public_key": "ed25519:J2xccRtuG43drESLYznHhLhQkLTdfepcKYbiQ9BsJVaf",
+  "signature": "9K2wAhc9Pjob8lNSrfDEsxoPtMbhiZbfn2r02sb8HPtdCMKdoVUbEqk6UR7ykdET4FlLtO65EAXulIwb7B0eBQ=="
+ }
+}

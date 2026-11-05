@@ -1,0 +1,33 @@
+The market on Qwen/Qwen3.8-27B, 3 game days, each merchant thinking every 1 hour(s)
+
+Day 1, tick 144, 7.0 min. Asked 168, unusable 1, cut by the leash 126, deals 66, with caravans 65, thinking cost $0.0445. Treasury 13785.
+  odin        till   606  wood 1497/1835 sold 2667 @1.00x m20%  stone 1926/2438 sold 2688 @1.08x m20%  metal 474/696 sold 954 @1.25x m35%
+  pia         till   146  berry 1779/2700 sold 2466 @1.64x m20%  medicine 119/120 sold 294 @0.98x m35%
+  rook        till   423  meat 594/1440 sold 877 @2.47x m30%  berry 1261/1406 sold 2298 @0.84x m20%
+  thea        till   496  metal 289/376 sold 1050 @1.02x m35%  stone 1911/2333 sold 1986 @1.01x m20%
+  cato        till   245  meat 571/539 sold 1004 @1.02x m30%  medicine 173/96 sold 253 @0.61x m35%
+  ivy         till   333  wood 1550/1663 sold 5256 @1.17x m30%  berry 998/1663 sold 2214 @1.93x m32%
+  bo          till   382  wood 1378/720 sold 4556 @0.48x m20%  stone 2378/4680 sold 1021 @1.72x m30%
+  broke so far: {}  words: cato: "Wolves keep the hunters home, but the stall stays full. Cheap meat, honest scale." rook: "Wolves keep the hunters home, so the meat stays dear. Take it or leave it." thea: "Stone is cheap today, metal is dear. Take what you need."
+
+Day 2, tick 288, 14.2 min. Asked 336, unusable 1, cut by the leash 320, deals 127, with caravans 131, thinking cost $0.0895. Treasury 14612.
+  odin        till   304  wood 2289/2494 sold 3041 @1.17x m40%  stone 2125/3010 sold 4325 @1.23x m35%  metal 155/901 sold 901 @3.10x m40%
+  pia         till   131  berry 1472/2025 sold 2259 @1.46x m40%  medicine 100/270 sold 107 @2.99x m40%
+  rook        till   381  meat 607/1514 sold 910 @2.29x m35%  berry 961/1669 sold 2363 @0.98x m30%
+  thea        till   385  metal 198/216 sold 661 @1.24x m40%  stone 2093/788 sold 3307 @0.16x m5%
+  cato        till   295  meat 72/394 sold 1076 @3.86x m35%  medicine 100/180 sold 149 @2.38x m40%
+  ivy         till   190  wood 1295/756 sold 4385 @0.51x m35%  berry 1217/756 sold 1717 @0.56x m25%
+  bo          till    67  wood 5099/2700 sold 3736 @0.73x m40%  stone 1705/900 sold 4072 @0.37x m30%
+  broke so far: {}  words: cato: "The frost bites hard, so the pot must boil. I have the meat to keep you warm." rook: "Berries are cheaper than the frost bite, take a basket." thea: "Stone is cheap as dirt, metal is warm. Take what you need."
+
+Day 3, tick 432, 21.4 min. Asked 504, unusable 1, cut by the leash 577, deals 157, with caravans 194, thinking cost $0.1345. Treasury 14492.
+  odin        till   377  wood 2209/3367 sold 316 @1.72x m30%  stone 2007/2708 sold 3817 @1.24x m25%  metal 556/1070 sold 278 @2.21x m30%
+  pia         till   249  berry 0/1669 sold 3006 @3.00x m18%  medicine 18/270 sold 51 @4.42x m30%
+  rook        till   328  meat 919/1721 sold 383 @2.07x m30%  berry 500/3415 sold 2524 @2.13x m30%
+  thea        till   363  metal 73/150 sold 594 @2.11x m40%  stone 177/2834 sold 3678 @2.30x m35%
+  cato        till    56  meat 389/709 sold 311 @2.67x m30%  medicine 133/405 sold 81 @3.46x m35%
+  ivy         till   182  wood 708/1080 sold 5839 @1.26x m25%  berry 498/1225 sold 1314 @2.12x m35%
+  bo          till   318  wood 588/972 sold 6249 @1.61x m8%  stone 2189/4050 sold 717 @1.56x m20%
+  broke so far: {}  words: cato: "Fresh meat, fair price. The quarry's open, so stone is cheap, but your belly needs filling." rook: "Berries are back, fresh and fair. Meat is scarce, so pay up." thea: "Metal's scarce, stone's cheap. Pick wisely."
+
+All tills: 2415 at the start, 1873 at the end. Stalls broke: 0.

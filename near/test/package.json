@@ -1,0 +1,6 @@
+{
+  "name": "till-dawn-market-tests",
+  "private": true,
+  "description": "Only for the stand-in NEAR AI that the market's tests use (fake_nearai.mjs).",
+  "dependencies": { "@noble/curves": "1.9.7", "@noble/hashes": "1.8.0" }
+}
