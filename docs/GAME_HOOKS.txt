@@ -1,27 +1,29 @@
 Every line of the game (the baseline, not in this repository) that touches the market, cut to 260 characters.
 
-index.html:329: <script src="market_rules.js"></script>
-index.html:330: <script src="market_sim.js"></script>
-index.html:331: <script src="ed25519.js"></script>
-index.html:332: <script src="bazaar.js"></script>
-main.js:97: if (typeof Bazaar !== 'undefined') Bazaar.boot();
-city.js:373: if (room && room.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) Bazaar.tick(ts / 1000, rnpcs, bubbles);
-city.js:481: if (key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) { room.props = R.props.slice(); Bazaar.dress(room, rnpcs); }          // (the Grand Market is alive: bazaar.js)
-city.js:779: let bzAfter = null; if (R.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) Bazaar.draw({ g, ox, oy, cs, z, put, after: fn => { bzAfter = fn; }, top: topPad, W, figure, actor });
-city.js:820: if (!ui) return; const h = topHTML() + (room && room.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live() ? Bazaar.errandsPill() : '') + (sheetKey ? sheetHTML(sheetKey) : ''); if (h === lastHTML) return;
-city.js:840: if (key.startsWith('bz:') && typeof Bazaar !== 'undefined') return Bazaar.sheetHTML(key, { esc, sheet, uic });
-city.js:965: const N = net(); { const f = document.activeElement; if (f && f.tagName === 'INPUT' && ui && ui.contains(f) && !/^(bz-lot)$/.test(a)) f.blur(); }          // (a button pressed ends the typing: a phone's browser leaves the focus in the box, and the card waits f
-city.js:967: if (a.startsWith('bz-') && typeof Bazaar !== 'undefined') { await Bazaar.act(a, b, { openSheet, talk: id => { const n = rnpcs.find(x => x.bz === id); sheetKey = null; if (n) talkTo(n); renderUI(); } }); renderUI(); return; }
-city.js:972: if (a === 'greet') { const k = b.dataset.k || '', [key, tabK] = k.split(':'); if (greet) greet.gone = true; if (!key || !room) { renderUI(); return; } if (k.startsWith('bz:')) { openSheet(k); return; } const staff = rnpcs.filter(n => n.act === key).sort((p, q)
-city.js:1044: if (R.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) { const id = Bazaar.stallAt(x, y), n = id && rnpcs.find(q => q.bz === id); if (n) { talkTo(n); return; } }
-ui.js:273: try { skip = (IS_LOCAL && (/[?&]notitle\b/.test(location.search) || /[?&]showcase\b/.test(location.search))) || sessionStorage.getItem('tilldawn.started') === '1' || (typeof Bazaar !== 'undefined' && Bazaar.demo()); } catch (e) { /* ignore */ }
-ui.js:274: if (typeof Bazaar !== 'undefined' && Bazaar.demo() && !CampName.has()) CampName.set('A camp at the market');
-ui.js:1027: function closePanelsForMarket() { closeTop(); if (typeof City !== 'undefined') { if (!City.isOpen()) City.open(); if (City.isOpen()) { City.enter('market'); City.openSheet('bz:steward'); } } }
-ui.js:1042: return `<div class="card seat ${st.mode !== 'off' ? 'active' : ''}"><div class="ic">${seatIcon(S.icon)}</div><div class="tx"><b>${S.name}</b><small>${S.blurb}</small>${st.last && hired ? `<small class="last">“${esc(st.last)}”${aiBy(st.lastBy)}</small>` : ''}${
-art_cozy_rooms.js:221: for (let i = 0; i < 6; i++) for (const bare of [false, true]) PROPS[(bare ? 'bare' : 'stall') + i] = () => mk(48, 44, g => {          // (bare: the Grand Market's live stalls put their own goods on the counter, bazaar.js)
+index.html:337: <script src="market_rules.js"></script>
+index.html:338: <script src="market_sim.js"></script>
+index.html:339: <script src="ed25519.js"></script>
+index.html:340: <script src="bazaar.js"></script>
+main.js:101: if (typeof Bazaar !== 'undefined') Bazaar.boot();
+city.js:417: if (room && room.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) Bazaar.tick(ts / 1000, rnpcs, bubbles);
+city.js:552: if (key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) { room.props = R.props.slice(); Bazaar.dress(room, rnpcs); }          // (the Grand Market is alive: bazaar.js)
+city.js:907: let bzAfter = null; if (R.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) Bazaar.draw({ g, ox, oy, cs, z, put, after: fn => { bzAfter = fn; }, top: topPad, W, figure, actor });
+city.js:962: if (!ui) return; const h = topHTML() + (room && room.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live() ? Bazaar.errandsPill() : '') + (sheetKey ? sheetHTML(sheetKey) : ''); if (h === lastHTML) return;
+city.js:971: const endWeek = () => { if (typeof Bazaar !== 'undefined' && Bazaar.week) Bazaar.weekStop(); };
+city.js:975: function openSheet(key) { if (key !== 'bz:week') endWeek(); sheetKey = key; note = ''; if (house(key) && house(key).opened) house(key).opened(); if (key === 'armoury' || key === 'durov') { Hero.loadShop().then(() => renderUI()); Hero.loadItems(true).then(() =>
+city.js:987: if (key.startsWith('bz:') && typeof Bazaar !== 'undefined') return Bazaar.sheetHTML(key, { esc, sheet, uic });
+city.js:1113: const N = net(); { const f = document.activeElement; if (f && f.tagName === 'INPUT' && ui && ui.contains(f) && !/^(bz-lot)$/.test(a)) f.blur(); }          // (a button pressed ends the typing: a phone's browser leaves the focus in the box, and the card waits f
+city.js:1116: if (a.startsWith('bz-') && typeof Bazaar !== 'undefined') { await Bazaar.act(a, b, { openSheet, talk: id => { const n = rnpcs.find(x => x.bz === id); sheetKey = null; if (n) talkTo(n); renderUI(); } }); renderUI(); return; }
+city.js:1121: if (a === 'greet') { const k = b.dataset.k || '', [key, tabK] = k.split(':'); if (greet) greet.gone = true; if (!key || !room) { renderUI(); return; } if (k.startsWith('bz:')) { openSheet(k); return; } const staff = rnpcs.filter(n => n.act === key).sort((p, q)
+city.js:1193: if (R.key === 'market' && typeof Bazaar !== 'undefined' && Bazaar.live()) { const id = Bazaar.stallAt(x, y), n = id && rnpcs.find(q => q.bz === id); if (n) { talkTo(n); return; } }
+ui.js:274: try { skip = (IS_LOCAL && (/[?&]notitle\b/.test(location.search) || /[?&]showcase\b/.test(location.search))) || sessionStorage.getItem('tilldawn.started') === '1' || (typeof Bazaar !== 'undefined' && Bazaar.demo()); } catch (e) { /* ignore */ }
+ui.js:275: if (typeof Bazaar !== 'undefined' && Bazaar.demo() && !CampName.has()) CampName.set('A camp at the market');
+ui.js:1072: function closePanelsForMarket() { closeTop(); if (typeof City !== 'undefined') { if (!City.isOpen()) City.open(); if (City.isOpen()) { City.enter('market'); City.openSheet('bz:steward'); } } }
+ui.js:1087: return `<div class="card seat ${st.mode !== 'off' ? 'active' : ''}"><div class="ic">${seatIcon(S.icon)}</div><div class="tx"><b>${S.name}</b><small>${S.blurb}</small>${st.last && hired ? `<small class="last">“${esc(st.last)}”${aiBy(st.lastBy)}</small>` : ''}<d
+art_cozy_rooms.js:243: for (let i = 0; i < 6; i++) for (const bare of [false, true]) PROPS[(bare ? 'bare' : 'stall') + i] = () => mk(48, 44, g => {          // (bare: the Grand Market's live stalls put their own goods on the counter, bazaar.js)
 src/worker.js:22: import { handleBazaar, bazaarCron } from './bazaar.js';
-src/worker.js:1095: if (url.pathname.startsWith('/api/bazaar/')) return await handleBazaar(req, env, url, { json, readJson, authUser });
-src/worker.js:1108: async scheduled(event, env, ctx) { ctx.waitUntil(runReminders(env)); ctx.waitUntil(bazaarCron(env).catch(e => console.log('market:', e && e.message))); if (new Date(event.scheduledTime || Date.now()).getUTCMinutes() % 10 === 0) ctx.waitUntil(cityCleanup(env).c
+src/worker.js:1117: if (url.pathname.startsWith('/api/bazaar/')) return await handleBazaar(req, env, url, { json, readJson, authUser });
+src/worker.js:1130: async scheduled(event, env, ctx) { ctx.waitUntil(runReminders(env)); ctx.waitUntil(bazaarCron(env).catch(e => console.log('market:', e && e.message))); if (new Date(event.scheduledTime || Date.now()).getUTCMinutes() % 10 === 0) ctx.waitUntil(cityCleanup(env).c
 wrangler.jsonc:18: "vars": { "NEAR_NETWORK": "testnet", "NEAR_ROOT": "tilldawn.testnet" },          // (the Grand Market: src/bazaar.js. The keys come from the secret NEAR_KEY_SEED; a NEAR AI key from the secret NEARAI_KEY)
 tools/setup_server.js:15: const only = (process.argv.find(x => x.startsWith('--only=')) || '').slice(7), stmts = sql.split(';').map(x => x.trim()).filter(Boolean).filter(x => !only || x.includes(only));          // (--only=bazaar: just the statements that name it)
 tools/setup_server.js:25: for (const k of ['BOT_TOKEN', 'WEBHOOK_SECRET', 'TG_LOGIN_SECRET', 'NEAR_KEY_SEED', 'NEARAI_KEY']) {

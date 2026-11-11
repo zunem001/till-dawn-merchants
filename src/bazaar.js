@@ -71,14 +71,17 @@ async function hello(req, env, c, h) {
     if (row) { account = row.account; if (account !== own) { const wk = await wardenKey(env, account), have = await clientOf(env, c).view(c.market, 'player', { account }).catch(() => null); if (have) await clientOf(env, c).tx(c.warden, wk, c.market, [Act.call('add_device_key', { account, key }, 30)]); } }
     else await env.DB.prepare('INSERT INTO bazaar_players (uid, account, created_at) VALUES (?, ?, ?)').bind(v.user.id, own, Date.now()).run();
   }
-  let welcomed = false, slow = null, spent = false;
+  let welcomed = false, slow = null, spent = false, full = false;
   if (body.first === true && c.network !== 'sandbox' && (await limited(env, 'new:' + ipOf(req), 100, 86400000))) spent = true;          // (a local chain, on a developer's or a judge's own machine, has no such limit: its address is always the same)
   else if (body.first === true) {          // (a new player's purse, from the treasury, and on the demo link crates to trade with: at most so many from one address in a day)
     const brings = body.crates === true ? Object.entries(R.DEMO_CRATES).map(([token, amount]) => ({ account, token, amount: String(amount) })) : [];
     const r = await clientOf(env, c).tx(c.warden, await wardenKey(env, account), c.market, [Act.call('serve', { brings, starters: [account], signed: [] }, 60)]); welcomed = r.ok; stateMemo.at = 0; if (Date.now() - t0 > 5000) slow = Object.assign({ ms: Date.now() - t0 }, r.trace);
+    // A REFUSED WELCOME IS SAID (round 63). On 2026-11-11 the contract's account held no more NEAR than its storage locks, the chain refused every new player's purse, and nothing said so:
+    // not the log, not the answer, not the screen. `full` tells the page that the market has no room; near/scripts/storage_room.mjs reports the room and sends NEAR.
+    if (!r.ok) { full = /LackBalanceForState/i.test(String(r.failure || '')); console.log('hello: no purse for a new player' + (full ? ' (THE MARKET ACCOUNT IS OUT OF STORAGE: send NEAR to ' + c.market + ')' : '') + ': ' + String(r.failure || '').slice(0, 240)); }
   }
   if (slow) console.log('slow hello:', JSON.stringify(slow));
-  return json(Object.assign({ ok: true, account, market: c.market, network: c.network, explorer: c.explorer, guest, welcomed, spent }, slow ? { slow } : {}));
+  return json(Object.assign({ ok: true, account, market: c.market, network: c.network, explorer: c.explorer, guest, welcomed, spent }, full ? { full } : {}, slow ? { slow } : {}));
 }
 
 /** a signed trade comes in; the warden brings it to the chain, with what the camp sent, and pays */
@@ -178,7 +181,8 @@ async function haggle(req, env, c, h) {
   if (!env.NEARAI_KEY || await limited(env, 'haggle-ai', 800, 86400000)) return json({ ok: true, say: 'My price is my price, friend.', off: 0, model: 'rulebook' });
   const past = await env.DB.prepare('SELECT said, answered, off FROM bazaar_talk WHERE account = ? AND merchant = ? ORDER BY id DESC LIMIT 4').bind(account, id).all().then(r => (r.results || []).reverse()).catch(() => []), me = await clientOf(env, c).view(c.market, 'player', { account }).catch(() => null), part = me && me.partners && me.partners.find(p => p.merchant === m.id), share = part ? Number((BigInt(part.shares) * 1000n) / BigInt(part.of)) / 10 : 0;
   const memory = (past.length ? 'What has passed between you before:\n' + past.map(p => `They said ${JSON.stringify(p.said)}. You said ${JSON.stringify(p.answered)} and gave ${p.off}%.`).join('\n') : 'You have not talked to this customer before.') + (share > 0 ? `\nThis customer owns ${share}% of your stall.` : '');
-  const a = await askNearAI(env, R.hagglePrompt(def), `Your till holds ${(Number(m.till) / 1000).toFixed(0)} gold. You deal in ${def.goods.join(' and ')}.\n${memory}\nThe customer says: ${JSON.stringify(words)}`, { limitMs: 28000, hedgeMs: 9000, proofMs: 5000 }).catch(() => null); if (!a) return json({ ok: true, say: 'Not today, friend.', off: 0, model: 'rulebook' });
+  const gold = v => (Number(v) / 1000).toFixed(2), prices = (m.goods || []).map(g => { const lot = BigInt((R.LOT || {})[g.token] || 1), a1 = R.ask(g, 1n, st.now_ms, R.CONFIG), aL = R.ask(g, lot, st.now_ms, R.CONFIG), b1 = R.bid(g, 1n, st.now_ms, R.CONFIG); return `${g.token}: you sell it at ${a1 === null ? '(none left)' : gold(a1)} each, ${aL === null ? 'not a whole lot left' : 'a lot of ' + lot + ' for ' + gold(aL)}; you buy it at ${gold(b1)} each; you hold ${g.stock}`; }).join('\n');          // (the owner's screenshot, 2026-11-05: asked the price of one medicine, Cato said twenty gold; it was 4.1)
+  const a = await askNearAI(env, R.hagglePrompt(def), `Your till holds ${(Number(m.till) / 1000).toFixed(0)} gold. You deal in ${def.goods.join(' and ')}.\nYour prices right now, in gold:\n${prices}\n${memory}\nThe customer says: ${JSON.stringify(words)}`, { limitMs: 28000, hedgeMs: 9000, proofMs: 5000 }).catch(() => null); if (!a) return json({ ok: true, say: 'Not today, friend.', off: 0, model: 'rulebook' });
   const asked = num(a.decision.give, 0, 100), say = String(a.decision.say || '').slice(0, 160); let tx = null;
   const aiAt = Date.now(); if (asked > 0) { const r = await Promise.race([clientOf(env, c).tx(m.id, await derivedKey(env.NEAR_KEY_SEED, 'merchant:' + id), c.market, [Act.call('give_haggle', { buyer: account, off_bp: asked * 100 }, 30)]), new Promise(res => setTimeout(() => res(null), 14000))]).catch(e => { console.log('haggle tx:', e.message); return null; }); if (r && r.ok) tx = r.hash; }          // (the answer does not wait on the chain for ever: a discount that lands late is still found on the next read)
   await env.DB.prepare('INSERT INTO bazaar_talk (account, merchant, at, said, answered, off) VALUES (?, ?, ?, ?, ?, ?)').bind(account, id, Date.now(), words, say, tx ? Math.min(asked, 30) : 0).run().catch(e => console.log('talk not kept:', e.message));

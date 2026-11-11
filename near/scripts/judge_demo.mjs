@@ -26,13 +26,24 @@ if (!hi.welcomed) ok(false, 'a first visit gets a purse (this address may have u
 await sleep(1500); let me = await view('player', { account }); ok(goldOf(me) > 0n && me.items.some(i => i.token === 'wood'), `read from the chain: a purse of ${gold(goldOf(me))} gold and crates of goods, all in one NEP-245 contract: ` + me.items.map(i => i.token + ' ' + i.amount).join(', '));
 ok(await view('mt_balance_of', { account_id: account, token_id: 'wood' }) === (me.items.find(i => i.token === 'wood') || {}).amount, 'mt_balance_of, the standard\'s own view, says the same');
 
-head('2. A sale: a signed intent, relayed; the price moves with the stock');
-const st0 = await view('state'), seller = st0.merchants.filter(m => m.open && m.goods.some(g => g.token === 'wood')).sort((a, b) => Number(BigInt(b.till) - BigInt(a.till)))[0], g0 = seller.goods.find(g => g.token === 'wood'), q = 50n, quote = R.bid(g0, q, st0.now_ms, R.CONFIG);
-const sold = await post('act', { signed: await signIntent(key, MARKET, account, nextSeq(), [{ sell: { merchant: seller.id, token: 'wood', amount: String(q), min_gold: String((quote * 85n) / 100n) } }]), brings: [] });
-ok(sold.ok, `${short(seller.id)} pays ${gold((sold.result && sold.result[0] && sold.result[0].gold) || 0)} gold for ${q} wood (the game's own sums said ${gold(quote)}). ${sold.tgas || '?'} Tgas, paid by the warden. ${ex(sold.tx)}`);
-await sleep(1200); const st1 = await view('state'), g1 = st1.merchants.find(m => m.id === seller.id).goods.find(g => g.token === 'wood'); ok(BigInt(g1.stock) >= BigInt(g0.stock) + q - 5n, `${short(seller.id)} holds ${g0.stock} wood before and ${g1.stock} after`);
-const uni = g => R.unitPrice(g.base, g.target, g.stock); ok(uni(g1) <= uni(g0) || g1.base !== g0.base, `the price per unit went from ${uni(g0)} to ${uni(g1)} thousandths of a gold`);
-const again = await post('act', { signed: await signIntent(key, MARKET, 'not-this-account.testnet', nextSeq(), [{ sell: { merchant: seller.id, token: 'wood', amount: '1', min_gold: '0' } }]), brings: [] }); ok(!again.ok, 'an intent signed by this key for somebody else\'s account is refused by the contract');
+head('2. A trade: a signed intent, relayed; the price moves with the stock');
+// A merchant keeps some gold back and buys only what its till can pay: the contract's own rule is the price plus a share of its starting till (lib.rs: gold + start * care / 400 > till is refused).
+// After a week of rent a stall can be short of gold, so the sale goes to whichever stall can pay the most for a lot the player holds. If no stall can pay, the player buys instead:
+// the same signed intent, relayed the same way, and the gold it brings is what fills a till again.
+const st0 = await view('state'), mine = new Map(me.items.map(i => [i.token, BigInt(i.amount)]));
+const pays = (m, g, q) => { const quote = R.bid(g, q, st0.now_ms, R.CONFIG); return quote > 0n && quote + (BigInt(m.start_till) * BigInt(m.care)) / 400n <= BigInt(m.till) ? quote : 0n; };
+let deal = null; for (const m of st0.merchants.filter(x => x.open)) for (const g of m.goods) { const q = BigInt(R.LOT[g.token] || 50); if ((mine.get(g.token) || 0n) < q) continue; const quote = pays(m, g, q); if (quote > 0n && (!deal || quote > deal.quote)) deal = { sell: true, m, g, q, quote }; }
+if (!deal) { for (const m of st0.merchants.filter(x => x.open)) for (const g of m.goods) { const q = BigInt(R.LOT[g.token] || 50); if (BigInt(g.stock) <= q * 2n) continue; const quote = R.ask(g, q, st0.now_ms, R.CONFIG); if (quote > 0n && quote <= goldOf(me) && (!deal || quote < deal.quote)) deal = { sell: false, m, g, q, quote }; }
+  console.log('       no stall\'s till can pay for a sale just now (tills, in gold: ' + st0.merchants.map(m => short(m.id) + ' ' + gold(m.till)).join(', ') + '), so the player buys instead'); }
+if (!deal) { ok(false, 'no stall can trade at all: the market is shut'); process.exit(1); }
+const seller = deal.m, g0 = deal.g, q = deal.q, quote = deal.quote, gold0 = goldOf(me);
+const sold = await post('act', { signed: await signIntent(key, MARKET, account, nextSeq(), [deal.sell ? { sell: { merchant: seller.id, token: g0.token, amount: String(q), min_gold: String((quote * 85n) / 100n) } } : { buy: { merchant: seller.id, token: g0.token, amount: String(q), max_gold: String((quote * 120n) / 100n) } }]), brings: [] });
+await sleep(1200); me = await view('player', { account });
+if (deal.sell) ok(sold.ok, `${short(seller.id)} pays ${gold((sold.result && sold.result[0] && sold.result[0].gold) || 0)} gold for ${q} ${g0.token} (the game's own sums said ${gold(quote)}). ${sold.tgas || '?'} Tgas, paid by the warden. ${ex(sold.tx)}`);
+else ok(sold.ok && gold0 - goldOf(me) > 0n, `the player pays ${gold(gold0 - goldOf(me))} gold to ${short(seller.id)} for ${q} ${g0.token} (the game's own sums said ${gold(quote)}). ${sold.tgas || '?'} Tgas, paid by the warden. ${ex(sold.tx)}`);
+const st1 = await view('state'), g1 = st1.merchants.find(m => m.id === seller.id).goods.find(g => g.token === g0.token); ok(deal.sell ? BigInt(g1.stock) >= BigInt(g0.stock) + q - 5n : BigInt(g1.stock) <= BigInt(g0.stock) - q + 5n, `${short(seller.id)} holds ${g0.stock} ${g0.token} before and ${g1.stock} after`);
+const uni = g => R.unitPrice(g.base, g.target, g.stock); ok((deal.sell ? uni(g1) <= uni(g0) : uni(g1) >= uni(g0)) || g1.base !== g0.base, `the price per unit went from ${uni(g0)} to ${uni(g1)} thousandths of a gold`);
+const again = await post('act', { signed: await signIntent(key, MARKET, 'not-this-account.testnet', nextSeq(), [{ sell: { merchant: seller.id, token: g0.token, amount: '1', min_gold: '0' } }]), brings: [] }); ok(!again.ok, 'an intent signed by this key for somebody else\'s account is refused by the contract');
 
 head('3. Talking to a merchant: an AI answers, and the contract holds the answer to its limit');
 const proofOf = async (label) => { const ts = Date.now(), sig = await key.sign(new TextEncoder().encode(label + '|' + account + '|' + ts)); return { account, ts, pub: key.publicKey, sig: Buffer.from(sig).toString('base64') }; };
